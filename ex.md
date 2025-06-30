@@ -14,7 +14,7 @@
 
 ---
 
-### building txs
+### building transactions
 
 - test 에서 mocha 쓰는법
 
@@ -32,4 +32,9 @@
 
 (5주차)
 
-- 발행량 정하기
+- 발행량 정하고 조절하기
+  > internal 함수를 활용해 컨트랙트가 배포되는 시점에만 딱 공급량이정해지게 할 수 있음
+
+//contract 안에서 contract 를 전송하는 tarnsaction msg 객체에 접근가능
+
+- transfer 구현하기

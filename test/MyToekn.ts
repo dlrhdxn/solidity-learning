@@ -19,8 +19,9 @@ describe("mytoken deploy test", () => {
   //   expect(await myTokenC.symbol()).equal("MT");
   //   expect(await myTokenC.decimal()).equal(18);
   // });
-  it("Token supply", async () => {
-    expect(await myTokenC.totalSupply()).equal(0);
-    expect(await myTokenC.balanceOf(signers[0])).equal(0);
+  it("Token supply and mint", async () => {
+    // 큰숫자는 Big Int 고려 > 10e18 안됨
+    expect(await myTokenC.totalSupply()).equal(10n ** 18n);
+    expect(await myTokenC.balanceOf(signers[0])).equal(10n ** 18n);
   });
 });
