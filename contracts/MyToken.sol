@@ -6,15 +6,21 @@ contract MyToken {
     string public symbol;
     uint8 public decimal; // 1 wei 정의
 
+    //데이터조회는 tx 로 처리할필요 x
     uint256 public totalSupply;
     mapping(address => uint256) public balanceOf;
 
-    constructor(string memory _name, string memory _symbol, uint8 _decimal) {
+    constructor(
+        string memory _name,
+        string memory _symbol,
+        uint8 _decimal,
+        uint256 _amount
+    ) {
         name = _name;
         symbol = _symbol;
         decimal = _decimal;
-        //amount 는 wei 단위로
-        _mint(10 ** uint256(decimal), msg.sender); // msg.sender 는 컨트랙트를 배포하는사람 : 즉, 제작자
+        //amount 는 wei 단위로, 메모리상에서 저장을 uint256 으로 하기에 형변환 맘껏해도상관x
+        _mint(_amount * 10 ** uint256(decimal), msg.sender); // msg.sender 는 컨트랙트를 배포하는사람 : 즉, 제작자
     }
 
     /*
@@ -35,5 +41,11 @@ contract MyToken {
     function _mint(uint256 amount, address owner) internal {
         totalSupply += amount;
         balanceOf[owner] += amount;
+    }
+
+    function transfer(uint256 amount, address to) external {
+        require(balanceOf[msg.sender] >= amount, "insufficient balance");
+        balanceOf[msg.sender] -= amount;
+        balanceOf[to] += amount;
     }
 }
