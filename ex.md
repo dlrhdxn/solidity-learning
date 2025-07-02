@@ -35,6 +35,8 @@ test/mytoken.ts
 
 ### solidity contract 만들기
 
+#### License set
+
 #### initializing
 
 - (토큰) 스마트콘트랙트를 만들고 , 배포, 테스트
@@ -111,3 +113,15 @@ for banking contract
   from : from(원래 소유자)
   to : to
   signer : router, spender (간접소유자)
+
+### Tiny Bank
+
+입금, 출금, staking 이 존재하는 은행 contract 만들어보기
+
+#### spec
+
+- 화페(Token) : MyToken
+- 기능
+  1. staking
+  2. deposit
+  3. withdraw vault
