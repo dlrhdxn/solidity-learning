@@ -96,9 +96,26 @@ describe("MyToken deploy test", () => {
       await expect(
         myTokenC
           .connect(alice)
-          .transferFrom(signers[0].address, alice, parseUnits("1"))
+          .transferFrom(signers[0].address, alice.address, parseUnits("1"))
       ).to.be.revertedWith("insufficient allowance");
     });
-    it("event test", async () => {});
+
+    it("assignment", async () => {
+      const alice = signers[1];
+      //1. alice 에게 자산 이동 권한부여
+      await expect(myTokenC.approve(alice, parseUnits("10")))
+        .to.emit(myTokenC, "Approval")
+        .withArgs(alice.address, parseUnits("10"));
+      //2. alice 가 signers[0] 에서 alice 에게 자산이동 시전
+      await expect(
+        myTokenC
+          .connect(alice)
+          .transferFrom(signers[0].address, alice.address, parseUnits("10"))
+      )
+        .to.emit(myTokenC, "Transfer")
+        .withArgs(signers[0].address, alice.address, parseUnits("10"));
+      //3. 자산이동 확인
+      expect(await myTokenC.balanceOf(alice.address)).equal(parseUnits("10"));
+    });
   });
 });
