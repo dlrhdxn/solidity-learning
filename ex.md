@@ -95,7 +95,7 @@ test/mytoken.ts
 
 #### 위임 (approve)
 
-# tx
+#tx
 
 for banking contract
 
