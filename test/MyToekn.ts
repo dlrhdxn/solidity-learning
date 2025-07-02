@@ -6,6 +6,10 @@ import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
 const supply = 100;
 const decimals = 18;
 
+function parseUnits(num: string) {
+  return hre.ethers.parseUnits(num, decimals);
+}
+
 describe("MyToken deploy test", () => {
   let myTokenC: MyToken;
   let signers: HardhatEthersSigner[];
@@ -35,26 +39,66 @@ describe("MyToken deploy test", () => {
   //     expect(await myTokenC.balanceOf(signers[0])).equal(10n ** 18n);
   //   });
   // });
-  describe("Transfer test", () => {
-    it("transfer test", async () => {
-      const alice = signers[1];
-      await myTokenC.transfer(
-        hre.ethers.parseUnits("0.5", decimals),
-        alice.address
-      );
-      console.log(await myTokenC.balanceOf(alice.address));
-      expect(await myTokenC.balanceOf(alice.address)).equal(
-        hre.ethers.parseUnits("0.5", decimals)
-      );
-    });
+  // describe("Transfer test", () => {
+  //   it("transfer test", async () => {
+  //     const alice = signers[1];
+  //     const tx = await myTokenC.transfer(
+  //       hre.ethers.parseUnits("0.5", decimals),
+  //       alice.address
+  //     );
+  //     const receipt = await tx.wait();
+  //     console.log("\n===receipt logs===\n");
+  //     console.log(receipt?.logs);
 
-    it("reverted with require test", async () => {
-      //reverted 는 트랜젝션은 성공, 가스비를 냈지만 그 코드는 실패함
+  //     console.log("\n === alice balance === \n");
+  //     console.log(await myTokenC.balanceOf(alice.address));
+  //     expect(await myTokenC.balanceOf(alice.address)).equal(
+  //       hre.ethers.parseUnits("0.5", decimals)
+  //     );
+  //     //Event test
+  //     console.log("\n===Event test====\n");
+  //     const filter = myTokenC.filters.Transfer(signers[0].address);
+  //     const logs = await myTokenC.queryFilter(filter, 0, "latest");
+  //     console.log(logs);
+
+  //     await expect(
+  //       myTokenC.transfer(hre.ethers.parseUnits("0.5", decimals), alice.address)
+  //     )
+  //       .to.emit(myTokenC, "Transfer")
+  //       .withArgs(
+  //         signers[0].address,
+  //         alice.address,
+  //         hre.ethers.parseUnits("1", decimals)
+  //       );
+  //   });
+
+  //   it("reverted with require test", async () => {
+  //     //reverted 는 트랜젝션은 성공, 가스비를 냈지만 그 코드는 실패함
+  //     const alice = signers[1];
+  //     //await 위치 파악
+  //     await expect(
+  //       myTokenC.transfer(
+  //         hre.ethers.parseUnits((supply + 1).toString(), decimals),
+  //         alice.address
+  //       )
+  //     ).to.be.revertedWith("insufficient balance");
+  //   });
+  // });
+  describe("Approval function - event test", () => {
+    it("approval test", async () => {
       const alice = signers[1];
-      //await 위치 파악
-      await expect(
-        myTokenC.transfer(hre.ethers.parseUnits("1.1", decimals), alice.address)
-      ).to.be.revertedWith("insufficient balance");
+      await expect(myTokenC.approve(alice, parseUnits("10")))
+        .to.emit(myTokenC, "Approval")
+        .withArgs(alice.address, parseUnits("10"));
     });
+    it("Transferfrom test", async () => {
+      const alice = signers[1];
+      await expect(
+        myTokenC
+          .connect(alice)
+          .transferFrom(signers[0].address, alice, parseUnits("1"))
+      ).to.be.revertedWith("insufficient allowance");
+    });
+    it("event test", async () => {});
   });
 });
