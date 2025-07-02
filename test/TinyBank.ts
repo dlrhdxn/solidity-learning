@@ -43,4 +43,15 @@ describe("TinyBank deploy test", () => {
       expect(await tinyBankC.stakedOf(me.address)).equal(parseUnits("50"));
     });
   });
+  describe("withdrawl test", () => {
+    it("withdraw test", async () => {
+      const amount = parseUnits("50");
+      await myTokenC.approve(await tinyBankC.getAddress(), amount);
+      await tinyBankC.stake(amount);
+      expect(await tinyBankC.stakedOf(me)).equal(amount);
+
+      await tinyBankC.withraw(amount);
+      expect(await tinyBankC.stakedOf(me)).equal(0);
+    });
+  });
 });

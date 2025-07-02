@@ -9,6 +9,7 @@ interface IMyToken {
 
 contract TinyBank {
     event Stake(address, uint256);
+    event Withdraw(uint256, address);
 
     IMyToken public stakingToken;
     mapping(address => uint256) public stakedOf;
@@ -24,6 +25,16 @@ contract TinyBank {
         stakingToken.transferFrom(msg.sender, address(this), amount);
         stakedOf[msg.sender] += amount;
         totalStaked += amount;
+
         emit Stake(msg.sender, amount);
+    }
+
+    function withraw(uint256 amount) external {
+        require(stakedOf[msg.sender] >= amount, "insufficient staked token");
+        stakingToken.transfer(amount, msg.sender);
+        stakedOf[msg.sender] -= amount;
+        totalStaked -= amount;
+
+        emit Withdraw(amount, msg.sender);
     }
 }

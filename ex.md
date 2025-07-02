@@ -114,6 +114,8 @@ for banking contract
   to : to
   signer : router, spender (간접소유자)
 
+(week 7)
+
 ### Tiny Bank
 
 입금, 출금, staking 이 존재하는 은행 contract 만들어보기
@@ -121,7 +123,8 @@ for banking contract
 #### spec
 
 - 화페(Token) : MyToken
-- 기능
+- vault기능
   1. staking
   2. deposit
-  3. withdraw vault
+  3. withdraw
+  4. reward (이자 등)
