@@ -156,3 +156,8 @@ interest systme 구현
 - modifier
   : python decorator 랑 기능적으로 같음
   \_ 로 caller 함수를 삽입, 함수 정의 옆에쓰면됨
+
+#### Access control
+
+owner 와 manager 를 정해서 mint() change_RewardPerBlock() 등의 access 를 control
+-> abstract contract 문법 이용
