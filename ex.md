@@ -128,3 +128,22 @@ for banking contract
   2. deposit
   3. withdraw
   4. reward (이자 등)
+
+#### reward
+
+interest systme 구현
+
+- reward token : MyToken
+- reward resource : 1MT/Block mint
+  period ?
+  블록체인만 써서 시간을 측정하려면
+  블록수 를 통해서만 판단가능
+  -> timestamp 를 찍는다해도 블럭끼리 통신이 안됨
+
+- reward distribution : stakedOf[user] / totalStaked
+
+##### reward tx 는 어떻게 처리하는가
+
+-> 매 블럭마다 state 변경 tx 호출하면 비용이 매우매우매우 커짐
+-> 효율적이고 정확한 동작을 수행하고 최소한의 tx 를 호출하는 알고리즘 필요
+-> 기본원리 : stake 나 withdraw 등을 호출할때 reward tx 자기거만 끼워넣자
