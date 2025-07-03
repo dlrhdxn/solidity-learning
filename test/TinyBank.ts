@@ -71,5 +71,12 @@ describe("TinyBank deploy test", () => {
       await tinyBankC.withraw(amount);
       console.log(await myTokenC.balanceOf(me.address));
     });
+    it("revert when hacker change his/her RPB", async () => {
+      const hacker = signers[3];
+      const target_rpb = parseUnits("1000000");
+      await expect(
+        tinyBankC.connect(hacker).setRPB(target_rpb)
+      ).to.be.revertedWith("You are not manager");
+    });
   });
 });

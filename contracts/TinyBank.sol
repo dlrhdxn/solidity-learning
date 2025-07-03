@@ -1,6 +1,8 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.28;
 
+import "./ManagedAccess.sol";
+
 interface IMyToken {
     function transfer(uint256 amount, address to) external;
 
@@ -9,7 +11,7 @@ interface IMyToken {
     function mint(uint256 amount, address ownder) external;
 }
 
-contract TinyBank {
+contract TinyBank is ManagedAccess {
     event Stake(address, uint256);
     event Withdraw(uint256, address);
 
@@ -19,13 +21,15 @@ contract TinyBank {
     //mapping 은 dict 이지만 getkey 가 없음, 해쉬테이블느낌?
     //> key 를 담은 stakeUsers 생성
     // address[] public stakedUsers;
-    uint256 rewardPerBlock = 1e18;
+    uint256 defaultRPB = 1e18;
+    uint256 rewardPerBlock;
 
     mapping(address => uint256) public stakedOf;
     uint256 public totalStaked;
 
-    constructor(IMyToken _stakingToken) {
+    constructor(IMyToken _stakingToken) ManagedAccess(msg.sender, msg.sender) {
         stakingToken = _stakingToken;
+        rewardPerBlock = defaultRPB;
     }
 
     modifier _updateReward(address to) {
@@ -37,6 +41,10 @@ contract TinyBank {
         }
         lastClaimedBlock[to] = block.number;
         _; //caller 함수 부분
+    }
+
+    function setRPB(uint256 rpb) external onlyManger {
+        rewardPerBlock = rpb;
     }
 
     function stake(uint256 amount) external _updateReward(msg.sender) {
