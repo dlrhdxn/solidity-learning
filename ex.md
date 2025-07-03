@@ -149,6 +149,8 @@ interest systme 구현
 -> 효율적이고 정확한 동작을 수행하고 최소한의 tx 를 호출하는 알고리즘 필요
 -> 기본원리 : stake 나 withdraw 등을 호출할때 reward tx 자기거만 끼워넣자
 
+(7주차)
+
 ##### refactoring reward
 
 - modifier

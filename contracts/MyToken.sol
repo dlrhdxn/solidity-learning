@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.28;
 
-contract MyToken {
+import "./ManagedAccess.sol";
+
+contract MyToken is ManagedAccess {
     event Transfer(address indexed from, address indexed to, uint256 amount);
     event Approval(address indexed spender, uint256 amount);
 
@@ -20,7 +22,8 @@ contract MyToken {
         string memory _symbol,
         uint8 _decimal,
         uint256 _amount
-    ) {
+    ) ManagedAccess(msg.sender, msg.sender) {
+        owner = msg.sender;
         name = _name;
         symbol = _symbol;
         decimal = _decimal;
@@ -44,15 +47,19 @@ contract MyToken {
 
     //mint: 주조하다 에서 유래, 즉 새로 토큰을 발행
     // internal function 은 언더바(_) 를 넣는게 국룰
-    function _mint(uint256 amount, address owner) internal {
+    function _mint(uint256 amount, address to) internal {
         totalSupply += amount;
-        balanceOf[owner] += amount;
+        balanceOf[to] += amount;
 
         emit Transfer(address(0), owner, amount);
     }
 
-    function mint(uint256 amount, address owner) external {
-        _mint(amount, owner);
+    function mint(uint256 amount, address to) external onlyManger {
+        _mint(amount, to);
+    }
+
+    function setManager(address _manager) external onlyOwner {
+        manager = _manager;
     }
 
     function transfer(uint256 amount, address to) external {

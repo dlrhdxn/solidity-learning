@@ -27,6 +27,7 @@ describe("TinyBank deploy test", () => {
     tinyBankC = await hre.ethers.deployContract("TinyBank", [
       await myTokenC.getAddress(),
     ]);
+    await myTokenC.setManager(tinyBankC.getAddress());
   });
   describe("tinybank init and staking test", () => {
     it("total stake", async () => {
