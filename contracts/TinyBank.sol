@@ -19,7 +19,7 @@ contract TinyBank {
     //mapping 은 dict 이지만 getkey 가 없음, 해쉬테이블느낌?
     //> key 를 담은 stakeUsers 생성
     // address[] public stakedUsers;
-    uint256 rewardPerBlock = 10e18;
+    uint256 rewardPerBlock = 1e18;
 
     mapping(address => uint256) public stakedOf;
     uint256 public totalStaked;
@@ -28,16 +28,19 @@ contract TinyBank {
         stakingToken = _stakingToken;
     }
 
-    function distributeReward(address to) internal {
-        uint256 blocks = block.number - lastClaimedBlock[to];
-        uint256 reward = (blocks * rewardPerBlock * stakedOf[to]) / totalStaked;
-        stakingToken.mint(reward, to);
+    modifier _updateReward(address to) {
+        if (stakedOf[to] > 0) {
+            uint256 blocks = block.number - lastClaimedBlock[to];
+            uint256 reward = (blocks * rewardPerBlock * stakedOf[to]) /
+                totalStaked;
+            stakingToken.mint(reward, to);
+        }
         lastClaimedBlock[to] = block.number;
+        _; //caller 함수 부분
     }
 
-    function stake(uint256 amount) external {
+    function stake(uint256 amount) external _updateReward(msg.sender) {
         require(amount >= 0, "cannot stake amount 0");
-        distributeReward(msg.sender);
         //또 transferFrom 의 호출자 signer는 tinybank
         stakingToken.transferFrom(msg.sender, address(this), amount);
         stakedOf[msg.sender] += amount;
@@ -45,9 +48,8 @@ contract TinyBank {
         emit Stake(msg.sender, amount);
     }
 
-    function withraw(uint256 amount) external {
+    function withraw(uint256 amount) external _updateReward(msg.sender) {
         require(stakedOf[msg.sender] >= amount, "insufficient staked token");
-        distributeReward(msg.sender);
         stakingToken.transfer(amount, msg.sender);
         stakedOf[msg.sender] -= amount;
         totalStaked -= amount;

@@ -140,10 +140,17 @@ interest systme 구현
   블록수 를 통해서만 판단가능
   -> timestamp 를 찍는다해도 블럭끼리 통신이 안됨
 
-- reward distribution : stakedOf[user] / totalStaked
+- reward distribution : stakedOf[user] / totalStaked \* 1MT/block
+  민팅된 1MT 를 유저들끼리 stakedtoken 비율로 나눠가짐
 
 ##### reward tx 는 어떻게 처리하는가
 
 -> 매 블럭마다 state 변경 tx 호출하면 비용이 매우매우매우 커짐
 -> 효율적이고 정확한 동작을 수행하고 최소한의 tx 를 호출하는 알고리즘 필요
 -> 기본원리 : stake 나 withdraw 등을 호출할때 reward tx 자기거만 끼워넣자
+
+##### refactoring reward
+
+- modifier
+  : python decorator 랑 기능적으로 같음
+  \_ 로 caller 함수를 삽입, 함수 정의 옆에쓰면됨

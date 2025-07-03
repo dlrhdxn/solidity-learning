@@ -54,4 +54,21 @@ describe("TinyBank deploy test", () => {
       expect(await tinyBankC.stakedOf(me)).equal(0);
     });
   });
+  describe("reawrd test", () => {
+    it("reward 1MT per block when only user is me", async () => {
+      const amount = parseUnits("50");
+      await myTokenC.approve(tinyBankC.getAddress(), amount);
+      await tinyBankC.stake(amount);
+      console.log(await tinyBankC.stakedOf(me.address));
+
+      const BLOCKS = 5;
+      const t = parseUnits("1");
+      for (var i = 0; i < BLOCKS; i++) {
+        await myTokenC.transfer(t, me.address);
+      }
+
+      await tinyBankC.withraw(amount);
+      console.log(await myTokenC.balanceOf(me.address));
+    });
+  });
 });
