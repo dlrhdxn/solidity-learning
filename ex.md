@@ -161,3 +161,7 @@ interest systme 구현
 
 owner 와 manager 를 정해서 mint() change_RewardPerBlock() 등의 access 를 control
 -> abstract contract 문법 이용
+
+(10주차)
+
+##### decentralize Access control
