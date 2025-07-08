@@ -8,6 +8,8 @@ contract NativeBank {
         uint256 balance = balanceOf[msg.sender];
         require(balance > 0, "insufficient balance");
 
+        //[to].call{value:} 하면 이 function 을 호출한 signer 가 to 에게 native 토큰을 전달
+        //상대방의 fall back이나 receive가 끝날때까지 기다림
         (bool success, ) = msg.sender.call{value: balance}("");
         require(success, "failed to send native token");
 

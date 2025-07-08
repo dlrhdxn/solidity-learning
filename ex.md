@@ -168,7 +168,42 @@ owner 와 manager 를 정해서 mint() change_RewardPerBlock() 등의 access 를
 
 ### Native Bank
 
-우리가 전에만든 mytoken 같은 erc - 20 토큰 과 더불어 기존의 native token을 처리
+우리가 전에만든 mytoken 같은 erc - 20 토큰 과 더불어
+`native token을 처리`
+-> payable function 필요
+: payable 은 ether 를 보낼 수 있게해줌
+: receive() or fallback 같은 예약된 function 필요
 
-native tx 이용
-native behavior 를 함
+low level call 이용
+-> [to].call{value:""}(data)
+
+(11주차)
+
+### security
+
+tx 을 실행 하고 어떤 function 을 호출할때
+
+사람이한것인지 보장할 수 없음
+
+즉
+`악의적인목적의 contract 가 다른 컨트랙트의 function 호출 가능`
+
+#### reentry attack
+
+`(bool success, ) = msg.sender.call{value: balance}("");`
+위와같은구문은 receive() 함수나 fallback() 함수가 실행될 때까지 기다리는 동기(synchronous) 호출
+-> 제어권을 상대에게 넘김
+
+race condition 과 비슷한 취약점발생,
+즉 상태가 적절한시기에 올바르게 업데이트되질않음
+->Reentrancy 재진입 공격가능
+
+시나리오
+$hacker's contract 에서 withdraw 호출
+-> #bank 에서 call 로 ether 전송 시작
+-> $fallback 또는 receive function 에서 다시 withdraw 호출
+-> #다시 bank 에서 call 로 ether 전송시작
+-> ...
+
+- Checks-Effects-Interactions 필요
+  : state 변경을 call 이전에 하면됨
