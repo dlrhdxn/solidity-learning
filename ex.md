@@ -165,3 +165,10 @@ owner 와 manager 를 정해서 mint() change_RewardPerBlock() 등의 access 를
 (10주차)
 
 ##### decentralize Access control
+
+### Native Bank
+
+우리가 전에만든 mytoken 같은 erc - 20 토큰 과 더불어 기존의 native token을 처리
+
+native tx 이용
+native behavior 를 함

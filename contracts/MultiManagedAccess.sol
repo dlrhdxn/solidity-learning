@@ -3,6 +3,7 @@ pragma solidity ^0.8.28;
 
 abstract contract MultiManagedAccess {
     uint constant Manager_Numbers = 5;
+    // uint immutable Backup_Manager_Numbers;
     address public owner;
     address[Manager_Numbers] public managers;
     bool[Manager_Numbers] public confirmed;
