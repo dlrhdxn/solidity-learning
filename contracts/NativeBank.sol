@@ -3,16 +3,24 @@ pragma solidity ^0.8.28;
 
 contract NativeBank {
     mapping(address => uint256) public balanceOf;
+    bool lock;
 
-    function withdraw() external {
+    modifier noreentrancy() {
+        require(!lock, "is now working on");
+        lock = true;
+        _;
+        lock = false;
+    }
+
+    function withdraw() external noreentrancy {
         uint256 balance = balanceOf[msg.sender];
         require(balance > 0, "insufficient balance");
 
-        balanceOf[msg.sender] = 0;
         //[to].call{value:} 하면 이 function 을 호출한 signer 가 to 에게 native 토큰을 전달
         //상대방의 fall back이나 receive가 끝날때까지 기다림
         (bool success, ) = msg.sender.call{value: balance}("");
         require(success, "failed to send native token");
+        balanceOf[msg.sender] = 0;
     }
 
     // native token(ether) only function
