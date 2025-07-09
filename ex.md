@@ -207,3 +207,26 @@ $hacker's contract 에서 withdraw 호출
 
 - Checks-Effects-Interactions 필요
   : state 변경을 call 이전에 하면됨
+
+### vyper
+
+### etc
+
+npx hardhat 을 hh 로 대체가능
+[다운주소](https://hardhat.org/hardhat-runner/docs/guides/command-line-completion)
+
+#### install
+
+vyper install and compiler configurations setting
+[vyper hardhat docs](https://hardhat.org/hardhat-runner/plugins/nomiclabs-hardhat-vyper)
+
+#### naming convention
+
+camel case
+snake case 등등
+
+(12주차)
+
+minting function 만들고
+
+`hh typechain` 명령어로 컴파일된 artifact 기반 생성
