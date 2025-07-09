@@ -59,7 +59,7 @@ contract TinyBank is MultiManagedAccess {
         emit Stake(msg.sender, amount);
     }
 
-    function withraw(uint256 amount) external _updateReward(msg.sender) {
+    function withdraw(uint256 amount) external _updateReward(msg.sender) {
         require(stakedOf[msg.sender] >= amount, "insufficient staked token");
         stakingToken.transfer(amount, msg.sender);
         stakedOf[msg.sender] -= amount;

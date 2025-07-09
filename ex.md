@@ -226,7 +226,11 @@ camel case
 snake case 등등
 
 (12주차)
-
+vyper
 minting function 만들고
 
 `hh typechain` 명령어로 컴파일된 artifact 기반 생성
+
+마무리
+vyper version 0.4.1 에 module 화 지원
+hardhat 은 0.3.0

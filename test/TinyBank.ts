@@ -33,7 +33,6 @@ describe("TinyBank deploy test", () => {
     ]);
     tinyBankC = await hre.ethers.deployContract("TinyBank", [
       await myTokenC.getAddress(),
-      [me.address, alice.address, bob.address, jack.address, nicole.address],
     ]);
     await myTokenC.setManager(tinyBankC.getAddress());
   });
@@ -59,7 +58,7 @@ describe("TinyBank deploy test", () => {
       await tinyBankC.stake(amount);
       expect(await tinyBankC.stakedOf(me)).equal(amount);
 
-      await tinyBankC.withraw(amount);
+      await tinyBankC.withdraw(amount);
       expect(await tinyBankC.stakedOf(me)).equal(0);
     });
   });
@@ -76,10 +75,10 @@ describe("TinyBank deploy test", () => {
         await myTokenC.transfer(t, me.address);
       }
 
-      await tinyBankC.withraw(amount);
+      await tinyBankC.withdraw(amount);
       // console.log(await myTokenC.balanceOf(me.address));
     });
-    it("revert when hacker change his/her RPB", async () => {
+    it("revert when hacker change RPB", async () => {
       const hacker = signers[3];
       const target_rpb = parseUnits("1000000");
       await expect(
