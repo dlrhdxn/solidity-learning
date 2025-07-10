@@ -234,3 +234,66 @@ minting function 만들고
 마무리
 vyper version 0.4.1 에 module 화 지원
 hardhat 은 0.3.0
+
+(13 주차)
+
+## 카이아 넷에 실제로 배포해보자
+
+### 네트워크 spec
+
+-> chain Id
+
+### 블록, 트랜젝션 tracking
+
+#### ERC - 20
+
+: 표준 이더리움 스마트 컨트랙트
+
+wrapped native token
+
+브릿지 서비스...
+
+ref
+https://ethereum.org/ko/
+https://ethereum.org/en/developers/docs/apis/json-rpc/
+https://ethernodes.org/
+https://etherscan.io/
+
+RPC Api 요청 으로 볼 수있지만...
+이더스캔 ㄱ
+
+#### FT NFT 조회
+
+Fungible token
+Not Fungible token
+
+#### 특정 스마트 컨트랙트 관련 정보 조회
+
+ABI,컴파일된 바이트코드, 거래내역 등
+
+- 개발자가 업로드하면 컨트랙트 소스코드도 조회가능
+
+---
+
+### hardhat node 에 배포
+
+`hh node`
+`hh ignition deploy ignition/modules/deploy.ts --network localhost`
+
+### kaia test net 배포 setting
+
+harhat config 에서 network field 작성
+
+kairos test net 사용
+
+#### kaia scan 에서 내가 배포한 컨트랙트찾고 verify(코드 업로드)
+
+ref
+https://docs.kaiascan.io/smart-contract-verification/hardhat-verify
+
+소스코드를 주면 컴파일하고 블럭의 컴파일된 바이트코드 와 비교해서 일치하면 업로드
+
+`hh verify --network kairos [contract 주소] [params]`
+
+verify 하면
+view function 을 웹ui 로 이용가능
