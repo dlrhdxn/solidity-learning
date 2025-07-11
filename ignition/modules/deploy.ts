@@ -1,8 +1,9 @@
 import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
-
+// m 이 블록체인 네트워크 객체 너낌
 export default buildModule("MyTokenDeploy", (m) => {
   const myTokenC = m.contract("MyToken", ["MyToken", "MT", 18, 100]);
   const tinyBankC = m.contract("TinyBank", [myTokenC]);
+  m.call(myTokenC, "setManager", [tinyBankC]);
   return { myTokenC, tinyBankC };
 });
 

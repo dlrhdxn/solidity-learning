@@ -24,7 +24,7 @@ contract TinyBank is ManagedAccess {
     uint256 defaultRPB = 1e18;
     uint256 rewardPerBlock;
 
-    mapping(address => uint256) public stakedOf;
+    mapping(address => uint256) public staked;
     uint256 public totalStaked;
 
     constructor(IMyToken _stakingToken) ManagedAccess(msg.sender, msg.sender) {
@@ -33,9 +33,9 @@ contract TinyBank is ManagedAccess {
     }
 
     modifier _updateReward(address to) {
-        if (stakedOf[to] > 0) {
+        if (staked[to] > 0) {
             uint256 blocks = block.number - lastClaimedBlock[to];
-            uint256 reward = (blocks * rewardPerBlock * stakedOf[to]) /
+            uint256 reward = (blocks * rewardPerBlock * staked[to]) /
                 totalStaked;
             stakingToken.mint(reward, to);
         }
@@ -51,17 +51,26 @@ contract TinyBank is ManagedAccess {
         require(amount >= 0, "cannot stake amount 0");
         //또 transferFrom 의 호출자 signer는 tinybank
         stakingToken.transferFrom(msg.sender, address(this), amount);
-        stakedOf[msg.sender] += amount;
+        staked[msg.sender] += amount;
         totalStaked += amount;
         emit Stake(msg.sender, amount);
     }
 
     function withdraw(uint256 amount) external _updateReward(msg.sender) {
-        require(stakedOf[msg.sender] >= amount, "insufficient staked token");
+        require(staked[msg.sender] >= amount, "insufficient staked token");
         stakingToken.transfer(amount, msg.sender);
-        stakedOf[msg.sender] -= amount;
+        staked[msg.sender] -= amount;
         totalStaked -= amount;
 
         emit Withdraw(amount, msg.sender);
+    }
+
+    function currentReward(address to) external view returns (uint256) {
+        if (staked[to] > 0) {
+            uint256 blocks = block.number - lastClaimedBlock[to];
+            return (blocks * rewardPerBlock * staked[to]) / totalStaked;
+        } else {
+            return 0;
+        }
     }
 }
